@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Likey</title>
+  <link href='./css/reset.css' rel='stylesheet' type='text/css'>
+  <link href='./css/styles.css' rel='stylesheet' type='text/css'>
+  <script src="js/jquery-min.js"></script>
+</head>
+<body>
+  <div id="board">
+    <ul id="listone">
+      <li>favourite movies</li>
+      <li id='delete' class="hideCross" style="float: right"><img style="margin-top: 6px" onclick='del()' height="16" width="16" src="./images/delete.png" alt="delete task"></li>
+    </ul>
+    <div class="list"></div>
+    <input placeholder="Add movies here" id='todo' type='text' onchange="show()" name='task'>
+    <button>Get Recommendation</button>
+  </div>
+</body>
+<script type='text/javascript' src="js/movieFriday.js">
+</script>
+</html>

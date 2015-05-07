@@ -3,8 +3,8 @@
 		<title></title>
 		<style>
 			form[name='consoleData'] textarea {
-				width: 400px;
-				height: 70px;
+				height: 180px;
+				width: 1001px;
 			}
 		</style>
 	</head>
@@ -32,10 +32,7 @@
 		
 		<form name="consoleData" action="admin.php" method="post">
 			<table>
-				<tr><td>All Titles: </td><td><textarea name="titles" value=""></textarea></td></tr>
-				<tr><td>All IMDB Rating: </td><td><textarea name="ratings" value=""></textarea></td></tr>
-				<tr><td>All Actors(Cast): </td><td><textarea name="actors" value=""></textarea></td></tr>
-				<tr><td>All Dates(Year): </td><td><textarea name="dates" value=""></textarea></td></tr>
+				<tr><td>All: </td><td><textarea name="all"><?php if (!isset($_POST['all'])) echo ""; else echo $_POST['all']; ?></textarea></td></tr>
 				<tr><td></td><td><input type="submit" name="submit" value="Submit Console Data"/></td></tr>
 			</table>
 		</form>
@@ -47,6 +44,7 @@
 <?php
 
 	include 'database.php';
+	include 'server_side_dom.php';
 	$serverName = 'localhost';
 	$userName = "rajdeep";
 	$password = "barman";
@@ -58,10 +56,10 @@
 
 		$conn = $db->dbConnect($serverName, $userName, $password, $dbname);
 
-		$name = $_GET['name'];
-		$rating = $_GET['iRating'];
-		$cast = $_GET['cast'];
-		$year = $_GET['year'];
+		$name = mysqli_real_escape_string($conn, $_GET['name']);
+		$rating = mysqli_real_escape_string($conn, $_GET['iRating']);
+		$cast = mysqli_real_escape_string($conn, $_GET['cast']);
+		$year = mysqli_real_escape_string($conn, $_GET['year']);
 		$abc = "insert into movies(name, imdbRating, cast, year) values('".$name."',".$rating.",'".$cast."',".$year.")";
 		$db->dbQuery($conn, $abc);
 		$db->dbCloseConnect($conn);
@@ -69,29 +67,32 @@
 
 	if ( isset($_POST['submit']) ) {
 
-		$titles = json_decode($_POST['titles']);
-		$ratings = json_decode($_POST['ratings']);
-		$actors = json_decode($_POST['actors']);
-		$dates = json_decode($_POST['dates']);
-
+		$infoArray = json_decode($_POST['all'], true);
 		$conn = $db->dbConnect($serverName, $userName, $password, $dbname);
-
+		
 		// creating the insert string
-		$lengthOfDataArray = count($titles);
-		$queryStr = "insert into movies(name, imdbRating, cast, year) values";
+		$lengthOfDataArray = count($infoArray['titles']);
+		$queryStr = "insert into movies(name, genreLink, imdbRating, cast, year, director) values";
 		$ing = "";
 		for ( $i = 0; $i < $lengthOfDataArray; $i++ ) {
-			$title = mysqli_real_escape_string($conn, $titles[$i]);
-			$rating = mysqli_real_escape_string($conn, $ratings[$i]);
-			$cast = mysqli_real_escape_string($conn, implode(', ', $actors[$i]));
-			$date = mysqli_real_escape_string($conn, $dates[$i]);
-			$ing = $ing ."('". $title."',". $rating .",'". $cast ."',". $date .")";
+			$title = mysqli_real_escape_string($conn, $infoArray['titles'][$i]);
+			$genreLink = $infoArray['pageUrls'][$i];
+			if ( !$infoArray['ratings'][$i] ) $rate = 0; else $rate = $infoArray['ratings'][$i]; 
+			$rating = mysqli_real_escape_string($conn, $rate);
+			$cast = mysqli_real_escape_string($conn, implode(', ', $infoArray['names'][$i]));
+			$date = mysqli_real_escape_string($conn, substr($infoArray['dates'][$i], 1, 4));
+			$director = mysqli_real_escape_string($conn, $infoArray['directors'][$i]);
+			$ing = $ing ."('". $title ."',"."'". $genreLink ."',". $rating .",'". $cast ."',". $date .",'".$director. "')";
 			if ($i < $lengthOfDataArray - 1) $ing = $ing .", ";
+			set_time_limit(0);
 		}
 		$queryString = $queryStr . $ing;
-		print $queryString;
+		
 		// saving to database
 		$db->dbQuery($conn, $queryString);
+		print '<div>';
+		print $queryString;
+		print '</div>';
 		$db->dbCloseConnect($conn);
 
 	}

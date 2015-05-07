@@ -1,0 +1,106 @@
+my fav movie list query
+-----------------------
+SELECT name, genre, director, imdbRating FROM `movies` where (name like '%bourne%' and name like '%ultimatum%') or (name like '%bourne%' and name like '%supremacy%') or (name like '%bourne%' and name like '%identity%') or name like '%avatar%' or (name like '%wallflower%' and name like '%perks%' and name like '%being%') or (name like '%national%' and name like '%treasure%') or (name like '%about%' and name like '%time%') or (name like '%300%') or (name like '%edge%' and name like '%tomorrow%') or (name like '%inception%') or (name like '%matrix%' and name like '%revolutions%') or (name like '%inglourious%' and name like '%basterds%') or (name like '%transporter%') or (name like '%home%' and name like '%alone%') or (name like '%troy%') or (name like '%big%' and name like '%hero%') or (name like '%matrix%' and name like '%reloaded%')
+
+
+Showing rows 0 - 24 (27 total, Query took 0.0116 seconds.)
+
+
+
+deleting duplicates
+--------------------
+DELETE movies FROM movies LEFT OUTER JOIN ( SELECT MIN(indexNumber) as indexNumber, name, genre, director, year, imdbRating, cast, genreLink FROM movies GROUP BY name ) as KeepRows ON movies.indexNumber = KeepRows.indexNumber WHERE KeepRows.indexNumber IS NULL
+
+672 rows deleted =>>> 1328 rows remain
+
+
+director:
+----------
+$('div[itemprop=director] a span').html()
+
+page_url:
+---------
+var array3 = [];
+$('.list .list_item .info b a').each(function(){array3.push($(this).attr('href'))});
+
+title:
+------ 
+var array = [];
+$('.list .list_item .info b a').each(function(){array.push($(this).html())});
+
+ratings:
+--------
+var ratings = [];
+$('.list .list_item .info .rating .rating-rating').each(function(){
+    var value = $(this).find('span:first');
+    ratings.push(value.html());
+});
+JSON.stringify(ratings);
+
+cast:
+------
+
+$('.list .list_item .info').each(function() {
+console.log($(this).find(".secondary").eq(1).addClass('actors'));
+})
+
+var index = 0;
+var names = [];
+$('.list .list_item .info .actors').each(function(){ names[index] = []; $(this).find('a').each(function(){ names[index].push($(this).html()); }); index++});
+JSON.stringify(names);
+
+
+year:
+------ 
+var array2 = []; 
+$('.list .list_item .info b span').each(function(){array2.push($(this).html())});
+JSON.stringify(array2);
+
+...................................................................................................................
+var info = {};
+
+info.titles = [];
+$('.list .list_item .info b a').each(function(){info.titles.push($(this).html())});
+
+info.pageUrls = [];
+$('.list .list_item .info b a').each(function(){info.pageUrls.push($(this).attr('href'))});
+
+info.ratings = [];
+$('.list .list_item .info .rating .rating-rating').each(function(){
+    var value = $(this).find('span:first');
+    info.ratings.push(value.html());
+});
+
+$ctn = $('.list .list_item .info');
+info.ratings = []; 
+$ctn.each(function(){ 
+    var x; 
+    if ( $(this).find('.rating .rating-rating').length == 0 ) x = null; 
+    else x = $($(this).find('.rating .rating-rating')).find('span:first').html(); 
+    info.ratings.push(x);
+});
+
+info.names = [];
+var index= 0; 
+$('.list .list_item .info').each(function() {
+    info.names[index] = [];
+    $($(this).find(".secondary")[1]).find('a').each(function(){ info.names[index].push($(this).html()); });
+    index++;
+})
+
+info.dates = []; 
+$('.list .list_item .info b span').each(function(){info.dates.push($(this).html())});
+
+info.directors = [];
+$('.list .list_item').each(function(){ info.directors.push($($(this).find('.secondary')[0]).find('a').html())});
+
+JSON.stringify(info);
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+body {font-family: 'Open Sans', sans-serif;}
+#board {width: 400px; margin-left: 2%;}
+#board input{border: 2px solid grey; }
+#listone li {float:left }
+#listone:after {display:block;content:''; clear:both}
+#listone li:first-child {width: 200px; font-style: italic; font-size: 21px;}
+.taskNo {display: none;}
+.showCross{display: block}
+.hideCross{display: none}

@@ -3,6 +3,7 @@
 	// uploading csv data to uploads folder
 	if ($_FILES['userfile']['error'] == 4) {
 		header('Location: http://localhost/anything-no/admin.php');
+		exit;
 	}
 	$uploaddir = '../uploads/';
 	$uploadfile = $uploaddir . basename($_FILES['userfile']['name']);

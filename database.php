@@ -22,17 +22,16 @@ class database {
 		try {
 			$result = mysqli_query($conn, $queryString);
 			if ( $result === true) {
-				echo "<div style='color: green;font-family: sans-serif;font-size: 12px'>Query run Successfully: ".$queryString."</div>";
-				return $result;
+				echo "<div class='serverMessages' style='color: green;font-family: sans-serif;font-size: 12px'>Query run Successfully: ".$queryString."</div>";
+				echo "<script>setTimeout(\"location.href = 'http://localhost/anything-no/admin.php';\",10000);</script>";
 			} else if ( $result === false) {
-				echo "<div style='color: red;font-family: sans-serif;font-size: 12px'>Error in query: ".$queryString."</div>";
-				return $result;	
+				echo "<div class='serverMessages' style='color: red;font-family: sans-serif;font-size: 12px'>Error in query: ".$queryString."</div>";
 			} else {
-				echo "<div style='color: green;font-family: sans-serif;font-size: 12px'>Query run Successfully. You get a return object</div>";
-				return mysqli_query($conn, $queryString);
+				echo "<div class='serverMessages' style='color: green;font-family: sans-serif;font-size: 12px'>Query run Successfully. You get a return object</div>";
+				return $result;
 			}
 		} catch (Exception $e) {
-			echo "<div style='color: red;font-family: sans-serif;font-size: 12px'>Query Error: ". $e->getMessage()."</div>";
+			echo "<div class='serverMessages' style='color: red;font-family: sans-serif;font-size: 12px'>Query Error: ". $e->getMessage()."</div>";
 		}
 	}
 
